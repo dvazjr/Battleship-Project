@@ -10,6 +10,10 @@ const gameBoard = [
 ];
 let hits = 0;
 
+function getRandomNumber(max) {
+  return Math.floor(Math.random() * max);
+}
+
 function startNewGame() {
   console.log("Press any key to start the game.");
   readlineSync.keyInPause("");
@@ -19,24 +23,27 @@ function startNewGame() {
     }
   }
 
-  let ship1Row, ship1Col, ship2Row, ship2Col;
   do {
-    ship1Row = Math.floor(Math.random() * 3);
-    ship1Col = Math.floor(Math.random() * 3);
-    ship2Row = Math.floor(Math.random() * 3);
-    ship2Col = Math.floor(Math.random() * 3);
+    var [ship1Row, ship1Col, ship2Row, ship2Col] = [1, 2, 3, 4].map((item) => {
+      return getRandomNumber(rows.length);
+    });
   } while (
     (ship1Row === ship2Row && ship1Col === ship2Col) ||
     gameBoard[ship1Row][ship1Col] === "X" ||
     gameBoard[ship2Row][ship2Col] === "X"
   );
 
-  gameBoard[ship1Row][ship1Col] = "X";
-  gameBoard[ship2Row][ship2Col] = "X";
+  [
+    [ship1Row, ship1Col],
+    [ship2Row, ship2Col],
+  ].map((item) => {
+    gameBoard[item[0]][item[1]] = "X";
+  });
 
   hits = 0;
 
   console.log("Game started!");
+  //console.log(gameBoard);
 }
 
 function updateGameBoard(row, col, hit) {
@@ -62,9 +69,9 @@ function playGame() {
     const col = columns.indexOf(userInput[1]);
     if (row === -1 || col === -1) {
       console.log("Invalid entry. Please enter a valid location (e.g. A2):");
-    } else if (gameBoard[row][col] === "X" || gameBoard[row][col] === "0") {
+    } else if (gameBoard[row][col] === "0") {
       console.log("You have already picked this location. Miss!");
-    } else if (gameBoard[row][col] === "") {
+    } else if (gameBoard[row][col] === "X") {
       updateGameBoard(row, col, true);
     } else {
       updateGameBoard(row, col, false);

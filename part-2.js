@@ -10,6 +10,10 @@ const ships = [
 ];
 let gameBoard = [];
 
+function getRandomNumber(max) {
+  return Math.floor(Math.random() * max);
+}
+
 function buildGrid(gridSize) {
   gameBoard = new Array(gridSize)
     .fill(null)
@@ -22,43 +26,70 @@ function placeShips() {
       let placed = false;
       while (!placed) {
         const orientation = Math.floor(Math.random() * 2);
-        const row = Math.floor(Math.random() * gameBoard.length);
-        const col = Math.floor(Math.random() * gameBoard[row].length);
+        var [row, col] = [rows.length, columns.length].map(getRandomNumber);
+        const params =
+          orientation === 0
+            ? [col, gameBoard[row].length]
+            : [row, gameBoard.length];
 
-        if (orientation === 0) {
-          if (col + ship.size <= gameBoard[row].length) {
-            let valid = true;
-            for (let j = 0; j < ship.size; j++) {
-              if (gameBoard[row][col + j] !== " ") {
-                valid = false;
-                break;
-              }
-            }
-            if (valid) {
-              for (let j = 0; j < ship.size; j++) {
-                gameBoard[row][col + j] = "X";
-              }
-              placed = true;
+        if (params[0] + ship.size <= params[1]) {
+          let valid = true;
+          for (let j = 0; j < ship.size; j++) {
+            const params2 =
+              orientation === 0
+                ? gameBoard[row][col + j]
+                : gameBoard[row + j][col];
+            if (params2 !== " ") {
+              valid = false;
+              break;
             }
           }
-        } else {
-          if (row + ship.size <= gameBoard.length) {
-            let valid = true;
+          if (valid) {
             for (let j = 0; j < ship.size; j++) {
-              if (gameBoard[row + j][col] !== " ") {
-                valid = false;
-                break;
-              }
-            }
-            if (valid) {
-              for (let j = 0; j < ship.size; j++) {
+              if (orientation === 0) {
+                gameBoard[row][col + j] = "X";
+              } else {
                 gameBoard[row + j][col] = "X";
               }
-              placed = true;
             }
+            placed = true;
           }
         }
       }
+      // if (orientation === 0) {
+      //   if (col + ship.size <= gameBoard[row].length) {
+      //     let valid = true;
+      //     for (let j = 0; j < ship.size; j++) {
+      //       if (gameBoard[row][col + j] !== " ") {
+      //         valid = false;
+      //         break;
+      //       }
+      //     }
+      //     if (valid) {
+      //       for (let j = 0; j < ship.size; j++) {
+      //         gameBoard[row][col + j] = "X";
+      //       }
+      //       placed = true;
+      //     }
+      //   }
+      // } else {
+      //   if (row + ship.size <= gameBoard.length) {
+      //     let valid = true;
+      //     for (let j = 0; j < ship.size; j++) {
+      //       if (gameBoard[row + j][col] !== " ") {
+      //         valid = false;
+      //         break;
+      //       }
+      //     }
+      //     if (valid) {
+      //       for (let j = 0; j < ship.size; j++) {
+      //         gameBoard[row + j][col] = "X";
+      //       }
+      //       placed = true;
+      //     }
+      //   }
+      // }
+      //   }
     }
   }
 }
